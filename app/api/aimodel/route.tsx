@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from 'openai';
+import { createOpenAIClient } from '@/lib/openai';
+
 
 export const openai = new OpenAI({
   baseURL: 'https://openrouter.ai/api/v1',
@@ -81,6 +83,7 @@ Output Schema:
 
 
 export async function POST(req:NextRequest) {
+    const openai = createOpenAIClient();
     const { messages,isFinal } = await req.json();
 
     try{
