@@ -174,6 +174,7 @@ function Itinerary() {
         </div>
       ),
     },
+    //@ts-ignore
     ...tripData?.itinerary.map((dayData)=>({
         title:`Day ${dayData?.day}`,
         content:(
