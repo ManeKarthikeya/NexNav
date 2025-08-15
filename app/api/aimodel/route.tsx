@@ -80,37 +80,27 @@ Output Schema:
 }`
 
 
-async function getOpenAIClient() {
-  return new OpenAI({
-    baseURL: 'https://openrouter.ai/api/v1',
-    apiKey: process.env.OPENROUTER_API_KEY,
-  });
-}
+export async function POST(req:NextRequest) {
+    const { messages,isFinal } = await req.json();
 
-export async function POST(req: NextRequest) {
-  const { messages, isFinal } = await req.json();
-  const openai = await getOpenAIClient();
-
-  try {
+    try{
     const completion = await openai.chat.completions.create({
-      model: 'google/gemini-2.5-flash',
-      response_format: { type: 'json_object' },
-      messages: [
+    model: 'google/gemini-2.5-flash',
+    response_format: { type: 'json_object' },
+    messages: [
         {
-          role: 'system',
-          content: isFinal ? FINAL_PROMPT : PROMPT
+            role:'system',
+            content: isFinal?FINAL_PROMPT : PROMPT
         },
         ...messages
-      ],
-    });
-    
-    const message = completion.choices[0].message;
-    return NextResponse.json(JSON.parse(message.content ?? ''));
-  } catch (e) {
-    console.error(e);
-    return NextResponse.json(
-      { error: 'Failed to process request' }, 
-      { status: 500 }
-    );
+    ],
+  });
+  console.log(completion.choices[0].message);
+  const message=completion.choices[0].message;
+  return NextResponse.json(JSON.parse(message.content??''));
+  }
+  catch(e)
+  {
+    return NextResponse.json(e);
   }
 }
