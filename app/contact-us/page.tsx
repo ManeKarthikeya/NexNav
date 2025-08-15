@@ -8,12 +8,14 @@ function AboutMe() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    //@ts-ignore
     let interval;
     if (isLoading) {
       interval = setInterval(() => {
         setProgress((prev) => (prev < 99 ? prev + 1 : prev));
       }, 50);
     }
+    //@ts-ignore
     return () => clearInterval(interval);
   }, [isLoading]);
 
