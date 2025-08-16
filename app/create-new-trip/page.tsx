@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import ChatBox from './_components/ChatBox'
+//@ts-ignore
 import Itinerary from './_components/Itinerary'
 import { useTripDetail } from '../provider'
 import GlobalMap from './_components/GlobalMap'
