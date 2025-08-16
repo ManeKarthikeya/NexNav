@@ -9,7 +9,9 @@ import Link from 'next/link';
 import HotelCardItem from './HotelCardItem';
 import PlaceCardItem from './PlaceCardItem';
 import { useTripDetail } from '@/app/provider';
-import { TripInfo } from './ChatBox';
+//import { TripInfo } from './ChatBox';
+//@ts-ignore
+import { TripInfo, Hotel, Activity, Itinerary } from './ChatBox';
 
 // const TRIP_DATA = {
 //         "destination": "Pune",
@@ -155,58 +157,54 @@ import { TripInfo } from './ChatBox';
 
 
 function Itinerary() {
-    //@ts-ignore
-    const {tripDetailInfo,setTripDetailInfo} = useTripDetail();
-    const [tripData,setTripData] = useState<TripInfo | null>(null)
+  //@ts-ignore
+    const {tripDetailInfo, setTripDetailInfo} = useTripDetail();
+    const [tripData, setTripData] = useState<TripInfo | null>(null);
 
-    useEffect(()=>{
-        tripDetailInfo && setTripData(tripDetailInfo)
-    },[tripDetailInfo])
+    useEffect(() => {
+        tripDetailInfo && setTripData(tripDetailInfo);
+    }, [tripDetailInfo]);
 
-  const data = tripData?[
-    {
-      title: "Hotels",
-      content: (
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            {tripData?.hotels.map((hotel,index)=>(
-                <HotelCardItem hotel={hotel}/>
-            ))}
-        </div>
-      ),
-    },
-    //@ts-ignore
-    ...tripData?.itinerary.map((dayData)=>({
-        title:`Day ${dayData?.day}`,
-        content:(
-            <div>
-                <p className='font-bold text-xl text-primary mb-3'>Best Time : {dayData?.best_time_to_visit_day}</p>
+    const data = tripData ? [
+        {
+            title: "Hotels",
+            content: (
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                {dayData?.activities.map((activity,index)=>(
-                        <PlaceCardItem activity={activity}/>
-                ))}
+                    {tripData.hotels.map((hotel, index) => (
+                        <HotelCardItem hotel={hotel} key={index}/>
+                    ))}
                 </div>
-            </div>
-        )
-    }))
-    
-  ]:[];
-  return (
-    <div className="relative w-full h-[83vh] overflow-auto">
-        {/* @ts-ignore */}
-      {tripData ? <Timeline data={data} tripData={tripData} />
-        :
-        <div>
-            <h2 className='flex gap-2 text-3xl text-white left-20 items-center absolute bottom-20'><ArrowLeft/>Getting to Know to build perfect trip here...</h2>
+            ),
+        },
+        ...tripData.itinerary.map((dayData: Itinerary) => ({
+            title: `Day ${dayData.day}`,
+            content: (
+                <div key={dayData.day}>
+                    <p className='font-bold text-xl text-primary mb-3'>Best Time : {dayData.best_time_to_visit_day}</p>
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {dayData.activities.map((activity: Activity, index) => (
+                            <PlaceCardItem activity={activity} key={index}/>
+                        ))}
+                    </div>
+                </div>
+            )
+        }))
+    ] : [];
 
-        <Image src={'/travel.png'} alt='travel' 
-        width={'800'} height={800}
-        className='w-full h-full object-cover rounded-3xl'
-        />  
-
+    return (
+        <div className="relative w-full h-[83vh] overflow-auto">
+            {tripData ? <Timeline data={data} tripData={tripData} />
+                :
+                <div>
+                    <h2 className='flex gap-2 text-3xl text-white left-20 items-center absolute bottom-20'>
+                        <ArrowLeft/>Getting to Know to build perfect trip here...
+                    </h2>
+                    <Image src={'/travel.png'} alt='travel' 
+                           width={'800'} height={800}
+                           className='w-full h-full object-cover rounded-3xl'
+                    />  
+                </div>
+            }
         </div>
-    }
-    </div>
-  );
+    );
 }
-
-export default Itinerary
