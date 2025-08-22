@@ -158,7 +158,8 @@ function ChatBox() {
 
 
   return (
-    <div className='h-[85vh] flex flex-col border shadow rounded-2xl p-5'>
+    // In ChatBox.tsx, update the main container classes
+<div className='h-[85vh] flex flex-col border shadow rounded-2xl p-3 md:p-5'>
         {messages?.length==0 && 
         <EmptyBoxState 
         onSelectOption={(v:string)=>{SetUserInput(v); onSend()}}/>

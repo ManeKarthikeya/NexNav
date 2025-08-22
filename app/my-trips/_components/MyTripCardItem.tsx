@@ -27,12 +27,16 @@ function MyTripCardItem({trip}:Props) {
       setPhotoUrl(result?.data);
     }
   return (
-    <Link href={'/view-trip/'+trip?.tripId} className='p-5 shadow rounded-2xl '>
+    <Link href={'/view-trip/'+trip?.tripId} className='p-3 sm:p-4 md:p-5 shadow rounded-xl sm:rounded-2xl block'>
          <Image src={photoUrl?photoUrl:'/placeholder.jpg'} alt={trip.tripId} width={400} height={400}
-         className='rounded-xl object-cover w-full h-[270px]'
+         className='rounded-lg sm:rounded-xl object-cover w-full h-[150px] sm:h-[200px] md:h-[270px]'
          />
-         <h2 className='flex gap-2 font-semibold text-xl mt-2'>{trip?.tripDetail?.origin} <ArrowBigRightIcon/> {trip?.tripDetail?.destination}</h2>
-         <h2 className='mt-2 text-gray-500 '>{trip?.tripDetail?.duration} Trip with {trip?.tripDetail?.budget} Budget</h2>
+         <h2 className='flex gap-1 sm:gap-2 font-semibold text-base sm:text-lg md:text-xl mt-2 items-center'>
+           {trip?.tripDetail?.origin} 
+           <ArrowBigRightIcon className='w-4 h-4 sm:w-5 sm:h-5'/> 
+           {trip?.tripDetail?.destination}
+         </h2>
+         <h2 className='mt-1 sm:mt-2 text-gray-500 text-sm sm:text-base'>{trip?.tripDetail?.duration} Trip with {trip?.tripDetail?.budget} Budget</h2>
      </Link>
   )
 }

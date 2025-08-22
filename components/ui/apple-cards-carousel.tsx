@@ -280,6 +280,7 @@ export const BlurImage = ({
 }: ImageProps) => {
   const [isLoading, setLoading] = useState(true);
   return (
+    //@ts-ignore
     <img
       className={cn(
         "h-full w-full transition duration-300",

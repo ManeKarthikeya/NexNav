@@ -9,76 +9,72 @@ function GlobalMap() {
     const mapRef = useRef<mapboxgl.Map | null>(null);
     //@ts-ignore
     const {tripDetailInfo} = useTripDetail();
+    
     useEffect(()=>{
+        if (!mapContainerRef.current) return;
+        
         mapboxgl.accessToken = process?.env?.NEXT_PUBLIC_MAPBOX_API_KEY || "";
+        
         if(!mapRef.current){
-        mapRef.current = new mapboxgl.Map({
-            	container: mapContainerRef.current!, // container ID
-            	style: 'mapbox://styles/mapbox/streets-v12', // style URL
-            	center: [-74.5, 40], // starting position [lng, lat]
-            	zoom: 1.7, // starting zoom
-                projection:'globe'
+            mapRef.current = new mapboxgl.Map({
+                container: mapContainerRef.current,
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: [0, 20], // Better initial center for global view
+                zoom: 1.5, // Better zoom level for global view
+                projection: 'globe'
             });
-      }
 
-            const markers: mapboxgl.Marker[] = [];
-
-            if(tripDetailInfo?.itinerary){
-                tripDetailInfo.itinerary.forEach((itinerary: Itinerary)=>{
-                    itinerary.activities.forEach((activity: Activity)=>{
-                        if(activity?.geo_coordinates?.longitude && activity?.geo_coordinates?.latitude){
-                            const marker = new mapboxgl.Marker({color: 'red'})
-                        .setLngLat([activity.geo_coordinates.longitude,activity.geo_coordinates.latitude])
-                        .setPopup(
-                            new mapboxgl.Popup({ offset: 25 }).setText(activity.place_name)
-                        )
-                        .addTo(mapRef.current!);
-                        markers.push(marker);
-                        const coordinates = [activity?.geo_coordinates?.longitude,activity?.geo_coordinates?.latitude] as [number,number]
-                        mapRef.current!.flyTo({
-                            center:coordinates,
-                            zoom:8,
-                            essential:true
-                        })
-                    }
+            // Handle map resize when container changes
+            const resizeObserver = new ResizeObserver(() => {
+                mapRef.current?.resize();
+            });
             
-                    });
-                });
+            if (mapContainerRef.current) {
+                resizeObserver.observe(mapContainerRef.current);
             }
 
             return () => {
-                markers.forEach(marker => marker.remove());
+                resizeObserver.disconnect();
             };
+        }
+
+        const markers: mapboxgl.Marker[] = [];
+
+        if(tripDetailInfo?.itinerary){
+            tripDetailInfo.itinerary.forEach((itinerary: Itinerary)=>{
+                itinerary.activities.forEach((activity: Activity)=>{
+                    if(activity?.geo_coordinates?.longitude && activity?.geo_coordinates?.latitude){
+                        const marker = new mapboxgl.Marker({color: 'red'})
+                            .setLngLat([activity.geo_coordinates.longitude, activity.geo_coordinates.latitude])
+                            .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(activity.place_name))
+                            .addTo(mapRef.current!);
+                        markers.push(marker);
+                    }
+                });
+            });
+
+            // Fit map to show all markers if there are any
+            if (markers.length > 0) {
+                const bounds = new mapboxgl.LngLatBounds();
+                markers.forEach(marker => {
+                    // @ts-ignore
+                    bounds.extend(marker.getLngLat());
+                });
+                mapRef.current.fitBounds(bounds, { padding: 50, maxZoom: 10 });
+            }
+        }
+
+        return () => {
+            markers.forEach(marker => marker.remove());
+        };
     },[tripDetailInfo]);
 
-
-    //     tripDetailInfo && tripDetailInfo?.itinerary.map((itinerary: Itinerary,index:number)=>{
-    //         itinerary.activities.map((activity:Activity,index:number)=>(
-    //             activity.geo_coordinates.longitude && new mapboxgl.Marker({color:'red'})
-    //         .setLngLat([activity.geo_coordinates.longitude,activity.geo_coordinates.latitude])
-    //         .setPopup(
-    //             new mapboxgl.Popup({offset:25}).setText(activity.place_name)
-    //         )
-    //             .addTo(map);
-    //             markers.push
-    //         )
-    //         ))
-            
-    //     })
-
-    // },[])
-
   return (
-    <div>
-        <div ref={mapContainerRef}
-        style={{
-            widows:'95%',
-            height:'85vh',
-            borderRadius:20
-        }}
-        >
-
-        </div>
+    <div className="w-full h-full relative">
+      <div 
+        ref={mapContainerRef}
+        className="w-full h-full rounded-lg"
+      />
     </div>
   )
 }

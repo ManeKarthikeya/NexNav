@@ -195,7 +195,9 @@ function Itinerary() {
     })) || [])
   ] : [];
   return (
-    <div className="relative w-full h-[83vh] overflow-auto">
+    // In Itinerary.tsx, update the container
+// In Itinerary.tsx, update the container height
+<div className="relative w-full h-full overflow-auto">
         {/* @ts-ignore */}
       {tripData ? <Timeline data={data} tripData={tripData} />
         :

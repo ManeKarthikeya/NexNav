@@ -9,13 +9,13 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 function ViewTrip() {
-
     const {tripid} = useParams();
-    const {userDetail,setUserDetail} = useUserDetail();
+    const {userDetail} = useUserDetail();
     const convex = useConvex();
     const [tripData,setTripData] = useState<Trip>();
     //@ts-ignore
-    const {tripDetailInfo,setTripDetailInfo} = useTripDetail();
+    const {setTripDetailInfo} = useTripDetail();
+    
     useEffect(()=>{
         userDetail && GetTrip()
     },[userDetail])
@@ -31,14 +31,16 @@ function ViewTrip() {
     }
 
   return (
-    <div className='grid grid-cols-5'>
-       <div className='col-span-3'>
+    <div className='flex flex-col lg:flex-row h-screen p-2 md:p-4 gap-2 md:gap-4'>
+       {/* Itinerary Section - Full width on mobile, 3/5 on desktop */}
+       <div className='lg:w-3/5 h-1/2 lg:h-full overflow-auto bg-white rounded-lg md:rounded-xl shadow-sm'>
          <Itinerary />
        </div>
-       <div className='col-span-2'>
-        <GlobalMap/>
+       
+       {/* GlobalMap Section - Full width on mobile, 2/5 on desktop */}
+       <div className='lg:w-2/5 h-1/2 lg:h-full overflow-auto bg-white rounded-lg md:rounded-xl shadow-sm'>
+         <GlobalMap/>
        </div>
-      
     </div>
   )
 }

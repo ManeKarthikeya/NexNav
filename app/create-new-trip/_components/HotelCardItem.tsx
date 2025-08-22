@@ -31,11 +31,13 @@ function HotelCardItem({hotel}:Props) {
 
   return (
     <div className='flex flex-col gap-2 bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg p-3 w-full'>
-                        <Image src={photoUrl?photoUrl:'/placeholder.jpg'} 
-                        alt={hotel?.hotel_name || 'Hotel Image'}
-                         width={400} height={200}
-                        className='rounded-xl shadow object-cover mb-2 w-full h-[270px]'
-                        />
+                        <Image 
+  src={photoUrl?photoUrl:'/placeholder.jpg'} 
+  alt={hotel?.hotel_name || 'Hotel Image'}
+  width={400} 
+  height={200}
+  className='rounded-xl shadow object-cover mb-2 w-full h-[180px] sm:h-[220px] md:h-[270px]'
+/>
                         <h2 className='font-semibold text-lg'>{hotel?.hotel_name}</h2>
                         <h2 className='text-gray-500'>{hotel.hotel_address}</h2>
                         <div className='flex justify-between items-center'>
